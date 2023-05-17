@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Space Invaders</title>
+    <style>
+        #game {
+            position: relative;
+            width: 480px;
+            height: 320px;
+            margin: 0 auto;
+            border: 2px solid black;
+        }
+        .ship {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 32px;
+            height: 32px;
+            background-color: #f00;
+        }
+        .bullet {
+            position: absolute;
+            width: 4px;
+            height: 16px;
+            background-color: #00f;
+        }
+        .invader {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            background-color: #0f0;
+        }
+    </style>
+</head>
+<body>
+    <div id="game">
+        <div id="ship" class="ship"></div>
+    </div>
+    <script>
+        // Ship movement
+        document.addEventListener("keydown", function(event) {
+            if (event.code === "ArrowLeft") {
+                moveShip(-10);
+            } else if (event.code === "ArrowRight") {
+                moveShip(10);
+            } else if (event.code === "Space") {
+                shoot();
+            }
+        });
+
+        function moveShip(offset) {
+            var ship = document.getElementById("ship");
+            var left = parseInt(ship.style.left) || 0;
+            left += offset;
+            left = Math.max(Math.min(left, 448), 0); // Limit movement within the game container
+            ship.style.left = left + "px";
+        }
+
+        // Shooting
+        function shoot() {
+            var bullet = document.createElement("div");
+            bullet.classList.add("bullet");
+            var ship = document.getElementById("ship");
+            var shipLeft = parseInt(ship.style.left) || 0;
+            var bulletLeft = shipLeft + 14; // Adjust position to align with the ship
+            bullet.style.left = bulletLeft + "px";
+            var bulletBottom = 0;
+            bullet.style.bottom = bulletBottom + "px";
+
+            var game = document.getElementById("game");
+            game.appendChild(bullet);
+
+            function moveBullet() {
+                bulletBottom += 5;
+                bullet.style.bottom = bulletBottom + "px";
+                if (bulletBottom < 320) {
+                    requestAnimationFrame(moveBullet);
+                } else {
+                    bullet.remove();
+                }
+            }
+
+            requestAnimationFrame(moveBullet);
+        }
+    </script>
+</body>
+</html>
